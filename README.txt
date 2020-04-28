@@ -1,2 +1,2 @@
-This is a README!
+Remember: To start flask use: npm run-script start-api
 
