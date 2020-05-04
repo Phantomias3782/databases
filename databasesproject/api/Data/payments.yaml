@@ -1,0 +1,14 @@
+Payment_ID: 1
+UserID: 2
+TimeStamp: 01-01-2020
+ActualState: true
+---
+Payment_ID: 2
+UserID: 2
+TimeStamp: 02-01-2020
+ActualState: true
+---
+Payment_ID: 3
+UserID: 3
+TimeStamp: 02-01-2020
+ActualState: true

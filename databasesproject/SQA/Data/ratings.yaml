@@ -1,0 +1,17 @@
+RatingID: 1
+UserID: 1
+MovieID: 2
+Rating: 4
+TextRating: "Good Movie. Would watch again."
+---
+RatingID: 2
+UserID: 1
+MovieID: 3
+Rating: 5
+TextRating: "Best Movie of all time."
+---
+RatingID: 3
+UserID: 2
+MovieID: 1
+Rating: 2
+TextRating: "Hate this movie."

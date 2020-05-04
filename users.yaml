@@ -1,0 +1,35 @@
+UserID: 1
+FName: "Marie"
+LName: "Sanders"
+ZipCode: 1234
+City: "Boston"
+Home_State: "Texas"
+Country: "U.S.A"
+eMail: "marie@sanders.com"
+Birthdate: 03-09-1971
+AboType: "Test"
+BankAccount: "5505 8765 9863"
+---
+UserID: 2
+FName: "Jack"
+LName: "Rhino"
+ZipCode: 5643
+City: "Huston"
+Home_State: "Nevada"
+Country: "U.S.A"
+eMail: "jack@rhino.net"
+Birthdate: 08-19-1971
+AboType: "Normal"
+BankAccount: "5505 0076 1233"
+---
+UserID: 3
+FName: "Tony"
+LName: "Stark"
+ZipCode: 7753
+City: "Paris"
+Home_State: "Ile de Paris"
+Country: "France"
+eMail: "tony.stark@avengers.com"
+Birthdate: 11-22-1991
+AboType: "Premium"
+BankAccount: "1123 0854 6466"
