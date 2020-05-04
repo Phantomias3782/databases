@@ -1,9 +1,12 @@
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 from config import DATABASE_URI 
 
 Base = declarative_base()
+
+association_table = Table('association', Base.metadata,Column('MovieID', Integer, ForeignKey('Movies.MovieID')),Column('ActorID', Integer, ForeignKey('Actors.ActorID')))
 
 # define tables
 
@@ -54,7 +57,6 @@ class Actors(Base):
     ActorID = Column(Integer, primary_key = True)
     ActorName = Column(String)
     Birthdate = Column(Date)
-    MovieIds = Column(String)
 
     # missing repr
 
@@ -65,7 +67,6 @@ class Directors(Base):
     DirectorID = Column(Integer, primary_key = True)
     DirectorName = Column(String)
     Birthdate = Column(Date)
-    MovieIds = Column(String)
 
     # missing repr
 
@@ -78,10 +79,12 @@ class Movies(Base):
     MovieName = Column(String)
     GenreID = Column(Integer)
     ActorID = Column(Integer, ForeignKey(Actors.ActorID)) # Foreign Key!!
-    DirectorID = Column(Integer) # Foreign Key!!
+    DirectorID = Column(Integer, ForeignKey(Directors.DirectorID)) # Foreign Key!!
     Studio = Column(String) # Foreign Key!!
     Description = Column(String)
     AgeRating = Column(Integer)
+
+    actors = relationship("Actors")
 
     # missing repr
 

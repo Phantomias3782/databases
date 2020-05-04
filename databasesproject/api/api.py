@@ -18,7 +18,6 @@ Session = sessionmaker(bind=engine)
 app = Flask(__name__)
 CORS(app)
 
-
 @app.route('/login', methods = ['POST', 'GET'])
 def check_login():
 
@@ -604,3 +603,36 @@ def loadspecmovie():
     # close session and retrun
     s.close()
     return jsonify(response)
+
+
+@app.route("/test", methods = ['GET'])
+def test():
+    #Encoder
+    s = Session()
+
+    movie = s.query(Movies).filter_by(MovieID = 1).first()
+    print("actors", movie.actors.ActorName)
+    print(type(movie.actors))
+    movie.actors = json.dumps(movie.actors, cls = AlchemyEncoder)
+    return json.dumps(movie, cls=AlchemyEncoder)
+
+from sqlalchemy.ext.declarative import DeclarativeMeta
+
+class AlchemyEncoder(json.JSONEncoder):
+
+
+    def default(self, obj):
+        if isinstance(obj.__class__, DeclarativeMeta):
+            # an SQLAlchemy class
+            fields = {}
+            for field in [x for x in dir(obj) if not x.startswith('_') and x != 'metadata']:
+                data = obj.__getattribute__(field)
+                try:
+                    json.dumps(data) # this will fail on non-encodable values, like other classes
+                    fields[field] = data
+                except TypeError:
+                    fields[field] = None
+            # a json-encodable dict
+            return fields
+
+        return json.JSONEncoder.default(self, obj)
