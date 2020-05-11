@@ -89,7 +89,6 @@ class Watchlist extends React.Component {
                     < MainPage {...this.state} />
                 :
                 <div>
-                    Das ist die Watchlist
                     <br/>
                     <table>
                         {this.state.content}
@@ -97,9 +96,9 @@ class Watchlist extends React.Component {
                     <Button onClick = {this.openmainpage}>
                         return to MainPage
                     </Button>
-                    <Button onClick = {this.showstate}>
+                    {/* <Button onClick = {this.showstate}>
                         showstate
-                    </Button>
+                    </Button> */}
                 </div>
                 }
             </div>

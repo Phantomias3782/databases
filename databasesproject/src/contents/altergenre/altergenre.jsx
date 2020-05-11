@@ -10,7 +10,7 @@ class AlterGenre extends React.Component {
         this.state = {
             tgenrename: probs.genre,
             tgenredescription: "",
-            genrename: "Name",
+            genrename: probs.genre,
             genredescription: "",
             showpopup: false
         }
@@ -41,10 +41,10 @@ class AlterGenre extends React.Component {
             "genreidentification": this.state.tgenrename
         }
 
-        axios.post("/altergenre", this.credentials).then(response => this.setState({"submit": response.data.loaded}))
+        axios.post("/altergenre", this.credentials).then(response => this.setState({"submit": response.data.loaded}, window.location.reload()))
         
         // reload window
-        window.location.reload()
+        // window.location.reload()
 
     }
 

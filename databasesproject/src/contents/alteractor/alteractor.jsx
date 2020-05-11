@@ -42,10 +42,10 @@ class AlterActor extends React.Component {
             actoridentification: this.state.tactorname
         }
 
-        axios.post("/alteractor", this.credentials).then(response => this.setState({"submitted": response.data.loaded}))
+        axios.post("/alteractor", this.credentials).then(response => this.setState({"submitted": response.data.loaded}, window.location.reload()))
 
         // reload window
-        window.location.reload()
+        // window.location.reload()
 
     }
 

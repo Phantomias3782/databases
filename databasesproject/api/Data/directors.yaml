@@ -1,14 +1,15 @@
 DirectorID: 1
 DirectorName: "Denies Villneuv"
 Birthdate: 01-01-1999
-MovieIds: null
 ---
 DirectorID: 2
 DirectorName: "David Cameron"
 Birthdate: 09-19-1956
-MovieIds: null
 ---
 DirectorID: 3
 DirectorName: "Rian Coogler"
 Birthdate: 12-24-1989
-MovieIds: null
+---
+DirectorID: 4
+DirectorName: "Christopherl Nolan"
+Birthdate: 09-04-1976

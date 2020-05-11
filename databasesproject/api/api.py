@@ -57,7 +57,8 @@ def deleteuser():
 
     # delete user
     s = Session()
-    s.query(User_Table).filter_by(eMail = email).delete()
+    user = s.query(User_Table).filter_by(eMail = email).first()
+    s.delete(user)
     s.commit()
 
     # close session and return
@@ -108,33 +109,44 @@ def alteruserinfo():
     # get input
     variables = request.get_json()
 
-    nFName = variables["fname"],
-    nLName = variables["lname"],
-    nZipCode = variables["zipcode"],
-    nCity = variables["city"],
-    nHome_State = variables["homestate"],
-    nCountry = variables["country"],
-    neMail = variables["email"],
-    nBirthdate = variables["birthday"],
-    nAboType = variables["abotype"],
-    nBankAccount = variables["bankaccount"]
-    ActiveUser = variables["activeuser"]
+    # nFName = variables["fname"],
+    # nLName = variables["lname"],
+    # nZipCode = variables["zipcode"],
+    # nCity = variables["city"],
+    # nHome_State = variables["homestate"],
+    # nCountry = variables["country"],
+    # neMail = variables["email"],
+    # nBirthdate = variables["birthday"],
+    # nAboType = variables["abotype"],
+    # nBankAccount = variables["bankaccount"]
+    # ActiveUser = variables["activeuser"]
 
     # get user
     s = Session()
-    user = s.query(User_Table).filter_by(eMail = ActiveUser).first()
+    user = s.query(User_Table).filter_by(eMail = variables["activeuser"]).first()
+
+    user.FName = variables["fname"]
+    user.LName = variables["lname"]
+    user.ZipCode = variables["zipcode"]
+    user.City = variables["city"]
+    user.Home_State = variables["homestate"]
+    user.Country = variables["country"]
+    user.neMail = variables["email"]
+    user.Birthdate = variables["birthday"]
+    user.AboType = variables["abotype"]
+    user.BankAccount = variables["bankaccount"]
 
     # update informations
-    user.FName = nFName
-    user.LName = nLName
-    user.ZipCode = nZipCode
-    user.City = nCity
-    user.Home_State = nHome_State
-    user.Country = nCountry
-    user.neMail = neMail
-    user.Birthdate = nBirthdate
-    user.AboType = nAboType
-    user.BankAccount = nBankAccount
+    # user.FName = nFName
+    # user.LName = nLName
+    # user.ZipCode = nZipCode
+    # user.City = nCity
+    # user.Home_State = nHome_State
+    # user.Country = nCountry
+    # user.neMail = neMail
+    # user.Birthdate = nBirthdate
+    # user.AboType = nAboType
+    # user.BankAccount = nBankAccount
 
     # upload to database
     s.commit()
@@ -188,7 +200,6 @@ def loadmovielist():
 
     # close session and return
     s.close()
-    print("movies", response)
     return jsonify(response)
 
 @app.route("/loadwatchlist", methods = ['POST', 'GET'])
@@ -196,29 +207,15 @@ def loadwatchlist():
 
     # get input
     variables = request.get_json()
-    user = variables["user"]
+    user = variables["user"]    
 
     # get data from database
     s = Session()
 
-    try:
+    watchlist = s.query(User_Table).filter_by(eMail = user).first().watchlist
+    watchlist = [movie.MovieName for movie in watchlist.movies]
 
-        # get user id
-        userid = s.query(User_Table).filter_by(eMail = user).first().UserID
-        
-        # get movieids
-        movieids = [ entry.MovieID for entry in s.query(Watchlist).filter_by(UserID = userid).all()]
-
-        # get movies from movieids
-        watchlist = []
-        for movieid in movieids:
-            watchlist.append(s.query(Movies).filter_by(MovieID = movieid).first().MovieName)
-        
-        response = {"watchlist": watchlist}
-
-    except Exception:
-
-        response = {"watchlist": ["no Movie"]}
+    response = {"watchlist": watchlist}
     
     # close session and return
     s.close()
@@ -313,7 +310,6 @@ def newactor():
         ActorID = actorid,
         ActorName = variables["actorname"],
         Birthdate = variables["birthday"],
-        MovieIds = ""
     )
 
     # add new user
@@ -343,7 +339,6 @@ def newdirector():
         DirectorID = directorid,
         DirectorName = variables["directorname"],
         Birthdate = variables["birthday"],
-        MovieIds = ""
     )
 
     # add new user
@@ -381,7 +376,6 @@ def altergenre():
     ident = variables["genreidentification"]
     name = variables["genrename"]
     description = variables["genredescription"]
-    print("genrevariables", variables)
 
     # get data to database
     s = Session()
@@ -406,7 +400,6 @@ def loaddirectorbirthdate():
 
     # get input
     variables = request.get_json()
-    print("directorname in birthday", variables)
     directorname = variables["directorname"]
 
     # get data to database
@@ -425,7 +418,6 @@ def alterdirector():
 
     # get input
     variables = request.get_json()
-    print("directorvariables", variables)
     ident = variables["directoridentification"]
     name = variables["directorname"]
     birthday = variables["birthday"]
@@ -460,7 +452,6 @@ def loadactorbirthdate():
 
     # get genredescription
     actorbirthday = s.query(Actors.Birthdate).filter_by(ActorName = actorname).first()
-    print("actorbirthday", str(actorbirthday[0]))
 
     # return and close
     response = {"birthday": str(actorbirthday[0])}
@@ -475,15 +466,14 @@ def alteractor():
     ident = variables["actoridentification"]
     name = variables["actorname"]
     birthday = variables["birthday"]
-    print("alteractorvariables", variables)
 
     # get data to database
     s = Session()
 
-    # get genre
+    # get actor
     actor = s.query(Actors).filter_by(ActorName = ident).first()
 
-    # update genre
+    # update actor
     actor.ActorName = name
     actor.Birthdate = birthday
 
@@ -501,11 +491,11 @@ def deletegenre():
     # get data
     variables = request.get_json()
     genre = variables["genre"]
-    print("execute delete genre:", genre)
 
     # delete user
     s = Session()
-    s.query(Genre).filter_by(GenreName = genre).delete()
+    genre = s.query(Genre).filter_by(GenreName = genre).first()
+    s.delete(genre)
     s.commit()
 
     # close session and return
@@ -519,11 +509,11 @@ def deletedirector():
     # get data
     variables = request.get_json()
     director = variables["director"]
-    print("execute delete director:", director)
 
     # delete user
     s = Session()
-    s.query(Directors).filter_by(DirectorName = director).delete()
+    director = s.query(Directors).filter_by(DirectorName = director).first()
+    s.delete(director)
     s.commit()
 
     # close session and return
@@ -541,7 +531,8 @@ def deleteactor():
 
     # delete user
     s = Session()
-    s.query(Actors).filter_by(ActorName = actor).delete()
+    actor = s.query(Actors).filter_by(ActorName = actor).first()
+    s.delete(actor)
     s.commit()
 
     # close session and return
@@ -563,36 +554,29 @@ def loadspecmovie():
     movieid = moviedata.MovieID
     movielength = moviedata.MovieLength
     moviename = moviedata.MovieName
-    genreid = moviedata.GenreID
-    actorid = moviedata.ActorID
     directorid = moviedata.DirectorID
     studio = moviedata.Studio
     description = moviedata.Description
     agerating = moviedata.AgeRating
+    actors = [actor.ActorName + ", " for actor in moviedata.actors]
+    genre = [genre.GenreName + ", " for genre in moviedata.genres]
+
+    # Delete last commata
+    actors[-1] = actors[-1][:-2]
+    genre[-1] = genre[-1][:-2]
+
+    # ratings = moviedata.ratings
 
     directorname = s.query(Directors.DirectorName).filter_by(DirectorID = directorid).all()
-    actorname = s.query(Actors.ActorName).filter_by(ActorID = actorid).all()
-    genre = s.query(Genre.GenreName).filter_by(GenreID = genreid).all()
 
-    ratings = s.query(Ratings).filter_by(MovieID = movieid).all()
-    #ratings = [rating.__dict__ for rating in ratings]
-
-    def row2dict(row):
-        d = {}
-        for column in row.__table__.columns:
-            d[column.name] = str(getattr(row, column.name))
-
-        return d
-    
-    ratings = [row2dict(rating) for rating in ratings]
-    print("ratings", ratings)
+    ratings = [{"rating": rating.Rating, "text": rating.TextRating} for rating in moviedata.ratings]
 
     # build response
     response = {
         "movielength": movielength,
         "moviename": moviename,
         "genre": genre,
-        "actor": actorname,
+        "actors": actors,
         "director": directorname,
         "studio": studio,
         "description": description,
@@ -604,6 +588,138 @@ def loadspecmovie():
     s.close()
     return jsonify(response)
 
+@app.route("/ratemovie", methods = ['GET', 'POST'])
+def ratemovie():
+    
+    # get variables
+    variables = request.get_json()
+
+    # get user and movieid
+    s = Session()
+    userid = s.query(User_Table.UserID).filter_by(eMail = variables["user"]).first()
+    movieid = s.query(Movies.MovieID).filter_by(MovieName = variables["movie"]).first()
+
+    # get latest ratingid
+    ratingid = s.query(func.max(Ratings.RatingID)).first()
+    ratingid = ratingid[0] + 1
+
+    # set new genre
+    rating = Ratings(
+        RatingID = ratingid,
+        UserID = userid,
+        MovieID = movieid,
+        Rating = variables["rating"],
+        TextRating = variables["textrating"]
+    )
+
+    # add new user
+    s.add(rating)
+    s.commit()
+
+    # close Session and return
+    s.close()
+    response = {"loaded": True}
+
+    return jsonify(response)
+
+@app.route("/addtowatchlist", methods = ['POST', 'GET'])
+def addtowatchlist():
+
+    variables = request.get_json()
+
+    # get data
+    s = Session()
+    movie = s.query(Movies).filter_by(MovieName = variables["movie"]).first()
+    userid = s.query(User_Table.UserID).filter_by(eMail = variables["user"]).first()
+
+    watchlist = s.query(Watchlist).filter_by(UserID = userid).first()
+
+    if str(type(watchlist)) == "<class 'NoneType'>":
+
+        latestwatchlist = s.query(func.max(Watchlist.WatchlistID)).first()
+        latestwatchlist = latestwatchlist[0] + 1
+        watchlist = Watchlist(
+            WatchlistID = latestwatchlist,
+            UserID = userid
+        )
+    else:
+        print("no", type(watchlist))
+
+    # append movie to watchlist
+    watchlist.movies.append(movie)
+    s.commit()
+
+    # return and close
+    s.close()
+    response = {"loading": True}
+
+    return jsonify(response)
+
+@app.route("/newmovie", methods = ['GET', 'POST'])
+def newmovie():
+
+    # get input
+    variables = request.get_json()
+
+    # open session and create new movie
+    s = Session()
+
+    movieid = s.query(func.max(Movies.MovieID)).first()
+    movieid = movieid[0] + 1
+
+    directorid = s.query(Directors.DirectorID).filter_by(DirectorName = variables["director"]).first()
+
+    movie = Movies(
+        MovieID = movieid,
+        MovieLength = variables["length"],
+        MovieName = variables["name"],
+        DirectorID = directorid,
+        Studio = variables["studio"],
+        Description = variables["description"],
+        AgeRating = variables["agerating"]
+    )
+    s.commit()
+
+    # add genres
+    for element in variables["genre"]:
+        genre = s.query(Genre).filter_by(GenreName = element).first()
+        movie.genres.append(genre)
+
+    # add actors
+    for element in variables["actors"]:
+        genre = s.query(Actors).filter_by(ActorName = element).first()
+        movie.actors.append(genre)
+    s.commit()
+
+    # return and close
+    s.close()
+    response = {"loading": True}
+
+    return jsonify(response)
+
+@app.route("/deletefromwatchlist", methods = ['GET', 'POST'])
+def deletefromwatchlist():
+
+    # get movie and user
+    variables = request.get_json()
+
+    # get watchlist
+    s = Session()
+
+    userid = s.query(User_Table.UserID).filter_by(eMail = variables["user"]).first()
+    watchlist = s.query(Watchlist).filter_by(UserID = userid).first()
+    movie = s.query(Movies).filter_by(MovieName = variables["movie"]).first()
+
+    if movie in watchlist.movies:
+        watchlist.movies.remove(movie)
+    s.commit()
+
+    # close and return
+    s.close()
+    response = {"loading": True}
+
+    return jsonify(response)
+
 
 @app.route("/test", methods = ['GET'])
 def test():
@@ -611,9 +727,11 @@ def test():
     s = Session()
 
     movie = s.query(Movies).filter_by(MovieID = 1).first()
-    print("actors", movie.actors.ActorName)
+    print("actors", movie.actors)
     print(type(movie.actors))
-    movie.actors = json.dumps(movie.actors, cls = AlchemyEncoder)
+    for actor in movie.actors:
+        print(actor.ActorName)
+    #movie.actors = json.dumps(movie.actors, cls = AlchemyEncoder)
     return json.dumps(movie, cls=AlchemyEncoder)
 
 from sqlalchemy.ext.declarative import DeclarativeMeta
@@ -636,3 +754,6 @@ class AlchemyEncoder(json.JSONEncoder):
             return fields
 
         return json.JSONEncoder.default(self, obj)
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')

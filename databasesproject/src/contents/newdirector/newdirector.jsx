@@ -30,10 +30,10 @@ class NewDirector extends React.Component {
             birthday: this.state.birthday
         }
 
-        axios.post("/newdirector", this.credentials).then(response => this.setState({"submit": response.data.loaded}))
+        axios.post("/newdirector", this.credentials).then(response => this.setState({"submit": response.data.loaded}, window.location.reload()))
 
         // reload window
-        window.location.reload()
+        // window.location.reload()
 
     }
 

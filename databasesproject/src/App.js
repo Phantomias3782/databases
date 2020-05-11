@@ -9,7 +9,7 @@ function App() {
   return (
 
     <BrowserRouter>
-      <div id = "app">
+      <div id = "myapp">
         {navigation()}
       </div>
     </BrowserRouter>

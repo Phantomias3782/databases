@@ -8,6 +8,7 @@ class AlterUserInfo extends React.Component{
 
     constructor(probs) {
         super(probs)
+        console.log("alter user probs", probs)
         this.state = {
             activeuser: probs.activeuser,
             userinfo: probs,

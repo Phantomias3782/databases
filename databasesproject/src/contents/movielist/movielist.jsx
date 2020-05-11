@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 
 import Movie from "../movie/movie.jsx"
 import MainPage from "../MainPage/mainpage.jsx"
+import NewMovie from "../newmovie/newmovie.jsx"
 
 class Movielist extends React.Component {
 
@@ -13,7 +14,11 @@ class Movielist extends React.Component {
             movielist: "",
             openmoviesite: false,
             activeuser: probs.activeuser,
-            loadmainpage: false
+            loadmainpage: false,
+            newmovie: false,
+            actors: probs.actors,
+            genres: probs.genres,
+            directorcontent: probs.directorcontent
         }
         console.log("probs", probs)
         this.loadmovies()
@@ -35,7 +40,7 @@ class Movielist extends React.Component {
         this.content = []
         this.state.movielist.map((movie) => (
             this.content.push(
-                <div>
+                <div id = "1">
                     <td>
                         <Button onClick = {this.openmovie} id = {movie} value = {movie}>
                             {movie}
@@ -58,6 +63,10 @@ class Movielist extends React.Component {
         this.setState({loadmainpage: true})
     }
 
+    newMovie = () => {
+        this.setState({newmovie: true})
+    }
+
     render () {
 
         return (
@@ -68,6 +77,9 @@ class Movielist extends React.Component {
                 this.state.loadmainpage ?
                     < MainPage {...this.state} />
                 :
+                this.state.newmovie ?
+                    < NewMovie {...this.state} />
+                :
                 <div>
                     <Button onClick = {this.showstate}>
                         showstate
@@ -75,6 +87,9 @@ class Movielist extends React.Component {
                     <table>
                         {this.state.content}
                     </table>
+                    <Button onClick = {this.newMovie}>
+                        New Movie
+                    </Button>
                     <Button onClick = {this.openmainpage}>
                         return to MainPage
                     </Button>

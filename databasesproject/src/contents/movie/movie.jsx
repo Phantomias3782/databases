@@ -3,6 +3,7 @@ import axios from "axios"
 import Button from '@material-ui/core/Button';
 
 import MainPage from "../MainPage/mainpage.jsx"
+import RateMovie from "../ratemovie/ratemovie.jsx";
 
 class Movie extends React.Component {
 
@@ -12,7 +13,8 @@ class Movie extends React.Component {
             movie: probs.movie,
             activeuser: probs.activeuser,
             user_email: probs.activeuser,
-            loadmainpage: false
+            loadmainpage: false,
+            ratemovie: false
         }
         console.log("probs:", probs)
         this.getmovieinfos()
@@ -54,7 +56,7 @@ class Movie extends React.Component {
         this.setState({genre: this.state.moviedata.genre})
         this.setState({movielength: this.state.moviedata.movielength})
         this.setState({studio: this.state.moviedata.studio})
-        this.setState({actor: this.state.moviedata.actor}, this.createratings)
+        this.setState({actor: this.state.moviedata.actors}, this.createratings)
 
     }
 
@@ -64,16 +66,15 @@ class Movie extends React.Component {
 
         // create ratings
         this.ratings = this.state.ratings
-        console.log("ratings", this.ratings)
         this.ratings.map((rating) => (
             this.ratingcontent.push(
-                <div>
+                <div id = {rating}>
                     <td>
                         <tr>
-                            {rating.Rating} / 10
+                            {rating.rating} / 5
                         </tr>
                         <tr>
-                            {rating.TextRating}
+                            {rating.text}
                         </tr>
                     </td>
                 </div>
@@ -90,6 +91,28 @@ class Movie extends React.Component {
         this.setState({loadmainpage: true})
     }
 
+    ratemovie = () => {
+        this.setState({ratemovie: true})
+    }
+
+    addtowatchlist = () => {
+        this.credentials = {
+            movie: this.state.movie,
+            user: this.state.user_email
+        }
+
+        axios.post("/addtowatchlist", this.credentials).then(response => console.log(response.data))
+    }
+
+    deletefromwatchlist = () => {
+        this.credentials = {
+            movie: this.state.movie,
+            user: this.state.user_email
+        }
+
+        axios.post("/deletefromwatchlist", this.credentials).then(response => console.log(response.data))
+    }
+
     render () {
 
         return (
@@ -97,6 +120,9 @@ class Movie extends React.Component {
             <div>
                 {this.state.loadmainpage ?
                     < MainPage {...this.state}/>
+                :
+                this.state.ratemovie ?
+                    <RateMovie {...this.state}/>
                 :
                 <div>
                     <Button onClick = {this.showstate}>
@@ -117,7 +143,7 @@ class Movie extends React.Component {
                         </tr>
                         <tr>
                             <td>
-                                Länge:
+                                Length:
                             </td>
                             <td>
                                 -----
@@ -161,7 +187,7 @@ class Movie extends React.Component {
                         </tr>
                         <tr>
                             <td>
-                                Actor:
+                                Actors:
                             </td>
                             <td>
                                 -----
@@ -172,7 +198,7 @@ class Movie extends React.Component {
                         </tr>
                         <tr>
                             <td>
-                                Genre:
+                                Genres:
                             </td>
                             <td>
                                 -----
@@ -198,6 +224,15 @@ class Movie extends React.Component {
                     <table>
                         {this.state.ratingcontent}
                     </table>
+                    <Button onClick = {this.ratemovie}>
+                        rate movie
+                    </Button>
+                    <Button onClick = {this.addtowatchlist}>
+                        Add to Watchlist
+                    </Button>
+                    <Button onClick = {this.deletefromwatchlist}>
+                        Delete from Watchlist
+                    </Button>
                     <Button onClick = {this.showmainpage}>
                         return to Mainpage
                     </Button>

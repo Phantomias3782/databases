@@ -1,14 +1,23 @@
 ActorID: 1
 ActorName: "Peter Dinklage"
 Birthdate: 07-11-1975
-MovieIds: null
 ---
 ActorID: 2
 ActorName: "Sophie Turner"
 Birthdate: 02-22-1981
-MovieIds: null
 ---
 ActorID: 3
 ActorName: "Emilia Clarke"
 Birthdate: 07-02-1991
-MovieIds: null
+---
+ActorID: 4
+ActorName: "Brent Spiner"
+Birthdate: 01-04-1964
+---
+ActorID: 5
+ActorName: "Patrick Stewart"
+Birthdate: 12-07-1979
+---
+ActorID: 6
+ActorName: "Evan Rachel Wood"
+Birthdate: 01-03-1988

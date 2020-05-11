@@ -28,9 +28,9 @@ class MainPage extends React.Component {
         this.state = {
             activeuser: probs.user_email,
             showpopup: false,
-            actor: "Select Actor",
-            director: "Select Director",
-            genre: "Select Genre",
+            actor: "",
+            director: "",
+            genre: "",
             openUserInfo: false,
             alterGenre: false,
             newGenre: false,
@@ -43,7 +43,17 @@ class MainPage extends React.Component {
         }
 
         this.loaddata()
+        this.loaduserinfo()
+        console.log("probs mainpage", probs)
         
+    }
+
+    loaduserinfo = () => {
+
+        this.user = {"user":this.state.activeuser}
+        axios.post("/getuserinfo", this.user)
+        .then(response => this.setState({userinfo: response.data.userinfo}))
+
     }
 
     loaddata = () => {
@@ -83,7 +93,7 @@ class MainPage extends React.Component {
 
         this.state.genres.map((genre) => (
             this.state.genrecontent.push(
-                <MenuItem value = {genre}>
+                <MenuItem value = {genre} id = "1">
                     {genre}
                 </MenuItem>
             )
@@ -91,7 +101,7 @@ class MainPage extends React.Component {
 
         this.state.actors.map((actor) => (
             this.state.actorcontent.push(
-                <MenuItem value = {actor}>
+                <MenuItem value = {actor} id = "2">
                     {actor}
                 </MenuItem>
             )
@@ -99,7 +109,7 @@ class MainPage extends React.Component {
 
         this.state.directors.map((director) => (
             this.state.directorcontent.push(
-                <MenuItem value = {director}>
+                <MenuItem value = {director} id = "3">
                     {director}
                 </MenuItem>
             )
@@ -136,10 +146,10 @@ class MainPage extends React.Component {
     confirmdelete = () => {
 
         this.user = {"user":this.state.activeuser}
-        axios.post("/deletuser", this.user).then(response => this.setState({deleted : response.data}))
+        axios.post("/deletuser", this.user).then(response => this.setState({deleted : response.data}, window.location.reload()))
 
         // reload
-        window.location.reload()
+        // window.location.reload()
     }
 
     interruptdelete = () => {
@@ -264,11 +274,9 @@ class MainPage extends React.Component {
                         navigation()
                     :
                     <div>
-                        Diese Hauptseite führt auf alle Datenbankfunktionen!
-                        <br/>
-                        <Button onClick = {this.showstate}>
+                        {/* <Button onClick = {this.showstate}>
                             showState
-                        </Button>
+                        </Button> */}
                         <br/>
                         <InputLabel>
                             Edit Genres

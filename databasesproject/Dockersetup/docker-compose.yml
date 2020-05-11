@@ -1,0 +1,49 @@
+version: '3.3'
+
+volumes:
+  pgadmin:
+
+services:
+  postgres:
+    container_name: postgres_container
+    build: ./
+    networks:
+      database_project_network:
+        ipv4_address: 10.5.0.4
+    ports:
+      - 5332:5432
+  
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin:/root/.pgadmin
+    ports:
+      - 2020:80
+    networks:
+      database_project_network:
+        ipv4_address: 10.5.0.5
+    restart: unless-stopped
+
+  python:
+    build: ../api
+    ports:
+      - "5000:5000"
+    networks:
+      database_project_network:
+        ipv4_address: 10.5.0.6
+  
+  react:
+    build: ../
+    ports:
+      - "3000:3000"
+
+networks:
+    database_project_network:
+      driver: bridge
+      ipam:
+        config:
+          - subnet: 10.5.0.0/16

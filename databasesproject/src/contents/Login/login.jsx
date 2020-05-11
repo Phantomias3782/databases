@@ -2,8 +2,8 @@ import React from "react";
 import axios from "axios"
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import Checkbox from '@material-ui/core/Checkbox';
 
 import MainPage from "../MainPage/mainpage.jsx"
 import NewUser from "../newuser/newuser.jsx"
@@ -13,26 +13,26 @@ class Login extends React.Component {
     constructor(probs) {
         super(probs)
         this.state = {
-            email: "beispiel@email.com",
+            email: "test@email.com",
             password: "2000-01-01",
-            user_email: "marie@sanders.com", // clear after finishing
+            user_email: "", // clear after finishing
             user_pwd: "",
-            verified: true // just to skip login page, delete later
+            verified: false//true // just to skip login page, delete later
         }
     }
 
     openMainPage = () => {
 
         this.verifyLogin()
-        this.loadUserWatchlist()
-        console.log("are movies there?", this.state)
+        //this.loadUserWatchlist()
+        //console.log("are movies there?", this.state)
 
     }
 
     loadUserWatchlist = () => {
 
         this.user = {
-            "email": this.state.user_email
+            "user": this.state.user_email
         } 
         // get data from flask
         axios.post("/loadwatchlist", this.user)
@@ -85,30 +85,29 @@ class Login extends React.Component {
                         <MainPage {...this.state}/>
                     :
                         <div>
-                            Das ist eine Login-Seite
                             <br/>
                             Email:
                             <TextField id = "email" label = {this.state.email} onChange = {this.handleEmailChange}/>
                             <br/>
-                            Passwort:
+                            Password:
                             <TextField id = "birthday" label = {this.state.password} onChange = {this.handlePasswordChange}/>
                             <br/>
                             <Button onClick = {this.openMainPage}>
-                                Anmelden
+                                Login
                             </Button>
-                            <Button onClick = {this.showResult}>
+                            {/* <Button onClick = {this.showResult}>
                                 showState
-                            </Button>
+                            </Button> */}
                             <Button onClick = {this.newUser}>
-                                Registrieren
+                                Sign up
                             </Button>
                             <br/>
-                            <FormControlLabel
+                            {/* <FormControlLabel
                                 value="stay logged in"
                                 control={<Checkbox color="primary" onChange = {this.handleloginchange}/>}
                                 label="stay logged in"
                                 labelPlacement="start"
-                                />
+                                /> */}
                         </div>
                 } 
                 
