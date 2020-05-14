@@ -12,6 +12,9 @@ from models import *
 from sqlalchemy.orm import sessionmaker
 # from crud import * # not neccessary
 
+exec(open("crud.py").read())
+print("exectuted crud.py")
+
 engine = create_engine(DATABASE_URI)
 Session = sessionmaker(bind=engine)
 

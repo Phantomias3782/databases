@@ -33,7 +33,8 @@ class AlterUserInfo extends React.Component{
             nabotype: probs.userinfo.AboType, // make to drop down field
             nbankaccount: probs.userinfo.BankAccount,
             loadmainwindow: false,
-            user_email: probs.activeuser
+            user_email: probs.activeuser,
+            adress: "http://localhost:5000"
             
         }
     }
@@ -98,7 +99,7 @@ class AlterUserInfo extends React.Component{
             "activeuser": this.state.activeuser
         }
 
-        axios.post("/alteruserinfo", this.credentials).then(response => this.setState({"submit": response.data.loaded}))
+        axios.post(this.state.adress+"/alteruserinfo", this.credentials).then(response => this.setState({"submit": response.data.loaded}))
         
         // reload window
         this.setState({"loadmainwindow": true})

@@ -14,10 +14,10 @@ WORKDIR /app
 RUN pip install -r requirements.txt
 
 # Set the startingpoint for the container
+CMD [ "python", "./crud.py" ]
 ENTRYPOINT [ "python" ]
 
 # create database
-CMD [ "crud.py" ]
 
 # start backend
 CMD ["api.py" ]

@@ -39,7 +39,8 @@ class MainPage extends React.Component {
             alterDirector: false,
             newDirector: false,
             showwatchlist: false,
-            logout: false
+            logout: false,
+            adress: "http://localhost:5000"
         }
 
         this.loaddata()
@@ -51,7 +52,7 @@ class MainPage extends React.Component {
     loaduserinfo = () => {
 
         this.user = {"user":this.state.activeuser}
-        axios.post("/getuserinfo", this.user)
+        axios.post(this.state.adress+"/getuserinfo", this.user)
         .then(response => this.setState({userinfo: response.data.userinfo}))
 
     }
@@ -59,13 +60,13 @@ class MainPage extends React.Component {
     loaddata = () => {
 
         // genres
-        axios.get("/loadgenres").then(response => this.setState({genres: response.data.genres}, this.delayotheraxios()))
+        axios.get(this.state.adress+"/loadgenres").then(response => this.setState({genres: response.data.genres}, this.delayotheraxios()))
 
         // actors
-        axios.get("/loadactors").then(response => this.setState({actors: response.data.actors}, this.delayotheraxios()))
+        axios.get(this.state.adress+"/loadactors").then(response => this.setState({actors: response.data.actors}, this.delayotheraxios()))
 
         // directors
-        axios.get("/loaddirectors").then(response => this.setState({directors: response.data.directors}, this.delayloadaxios()))
+        axios.get(this.state.adress+"/loaddirectors").then(response => this.setState({directors: response.data.directors}, this.delayloadaxios()))
 
     }
 
@@ -73,7 +74,7 @@ class MainPage extends React.Component {
 
         this.user = {"user":this.state.activeuser}
 
-        axios.post("/getuserinfo", this.user)
+        axios.post(this.state.adress+"/getuserinfo", this.user)
         .then(response => this.setState({test: response.data.userinfo}))
     }
 
@@ -81,7 +82,7 @@ class MainPage extends React.Component {
 
         this.user = {"user":this.state.activeuser}
 
-        axios.post("/getuserinfo", this.user)
+        axios.post(this.state.adress+"/getuserinfo", this.user)
         .then(response => this.setState({test: response.data.userinfo}, this.loadcontent()))
     }
 
@@ -120,7 +121,7 @@ class MainPage extends React.Component {
 
         this.user = {"user":this.state.activeuser}
 
-        axios.post("/getuserinfo", this.user)
+        axios.post(this.state.adress+"/getuserinfo", this.user)
         .then(response => this.setState({userinfo: response.data.userinfo}), this.delayingaxios())
 
     }
@@ -128,7 +129,7 @@ class MainPage extends React.Component {
     delayingaxios = () => {
 
         this.user = {"user":this.state.activeuser}
-        axios.post("/getuserinfo", this.user)
+        axios.post(this.state.adress+"/getuserinfo", this.user)
         .then(response => this.setState({userinfo: response.data.userinfo}, this.openPage()))
     }
 
@@ -146,7 +147,7 @@ class MainPage extends React.Component {
     confirmdelete = () => {
 
         this.user = {"user":this.state.activeuser}
-        axios.post("/deletuser", this.user).then(response => this.setState({deleted : response.data}, window.location.reload()))
+        axios.post(this.state.adress+"/deletuser", this.user).then(response => this.setState({deleted : response.data}, window.location.reload()))
 
         // reload
         // window.location.reload()
@@ -164,7 +165,7 @@ class MainPage extends React.Component {
 
     delayGenreChange = () => {
         this.user = {"user":this.state.activeuser}
-        axios.post("/getuserinfo", this.user)
+        axios.post(this.state.adress+"/getuserinfo", this.user)
         .then(response => this.setState({userinfo: response.data.userinfo}, this.openGenreChange()))
     }
 
@@ -185,7 +186,7 @@ class MainPage extends React.Component {
 
     delayActorChange = () => {
         this.user = {"user":this.state.activeuser}
-        axios.post("/getuserinfo", this.user)
+        axios.post(this.state.adress+"/getuserinfo", this.user)
         .then(response => this.setState({userinfo: response.data.userinfo}, this.openActorChange()))
     }
 
@@ -206,7 +207,7 @@ class MainPage extends React.Component {
 
     delayDirectorChange = () => {
         this.user = {"user":this.state.activeuser}
-        axios.post("/getuserinfo", this.user)
+        axios.post(this.state.adress+"/getuserinfo", this.user)
         .then(response => this.setState({userinfo: response.data.userinfo}, this.openDirectorChange()))
     }
 
@@ -247,7 +248,7 @@ class MainPage extends React.Component {
                     <AlterUserInfo {...this.state}/>
                 :
                     this.state.newGenre ?
-                        <NewGenre />
+                        <NewGenre {...this.state}/>
                     :
                     this.state.alterGenre ?
                         <AlterGenre {...this.state} />
@@ -256,13 +257,13 @@ class MainPage extends React.Component {
                         <AlterDirector {...this.state}/>
                     :
                     this.state.NewDirector ?
-                        <NewDirector />
+                        <NewDirector {...this.state}/>
                     :
                     this.state.AlterActor ?
                         <AlterActor {...this.state}/>
                     :
                     this.state.NewActor ?
-                        <NewActor />
+                        <NewActor {...this.state}/>
                     :
                     this.state.showwatchlist ?
                         <Watchlist {...this.state}/>

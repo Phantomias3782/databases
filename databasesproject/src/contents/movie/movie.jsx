@@ -14,7 +14,8 @@ class Movie extends React.Component {
             activeuser: probs.activeuser,
             user_email: probs.activeuser,
             loadmainpage: false,
-            ratemovie: false
+            ratemovie: false,
+            adress: "http://localhost:5000"
         }
         console.log("probs:", probs)
         this.getmovieinfos()
@@ -25,14 +26,14 @@ class Movie extends React.Component {
         this.credentials = {
             "movie": this.state.movie
         }
-        axios.post("/loadspecmovie", this.credentials).then(response => this.setState({moviedata: response.data}, this.delayaxios))
+        axios.post(this.state.adress+"/loadspecmovie", this.credentials).then(response => this.setState({moviedata: response.data}, this.delayaxios))
     }
 
     delayaxios = () => {
         
         this.user = {"user":this.state.activeuser}
 
-        axios.post("/getuserinfo", this.user)
+        axios.post(this.state.adress+"/getuserinfo", this.user)
         .then(response => this.setState({test: response.data.userinfo}, this.delayaxios2))
 
     }
@@ -41,7 +42,7 @@ class Movie extends React.Component {
 
         this.user = {"user":this.state.activeuser}
 
-        axios.post("/getuserinfo", this.user)
+        axios.post(this.state.adress+"/getuserinfo", this.user)
         .then(response => this.setState({test: response.data.userinfo}, this.buildmoviedata))
     }
 
@@ -101,7 +102,7 @@ class Movie extends React.Component {
             user: this.state.user_email
         }
 
-        axios.post("/addtowatchlist", this.credentials).then(response => console.log(response.data))
+        axios.post(this.state.adress+"/addtowatchlist", this.credentials).then(response => console.log(response.data))
     }
 
     deletefromwatchlist = () => {
@@ -110,7 +111,7 @@ class Movie extends React.Component {
             user: this.state.user_email
         }
 
-        axios.post("/deletefromwatchlist", this.credentials).then(response => console.log(response.data))
+        axios.post(this.state.adress+"/deletefromwatchlist", this.credentials).then(response => console.log(response.data))
     }
 
     render () {

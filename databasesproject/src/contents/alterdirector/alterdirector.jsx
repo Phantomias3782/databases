@@ -3,6 +3,8 @@ import axios from "axios"
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+import MainPage from "../MainPage/mainpage.jsx"
+
 class AlterDirector extends React.Component {
 
     constructor(probs) {
@@ -11,19 +13,25 @@ class AlterDirector extends React.Component {
             tdirectorname: probs.director,
             tbirthday: "Birthday in format 2000-01-01",
             directorname: probs.director,
+            user_email: probs.activeuser,
             birthday: "",
-            showpopup: false
+            showpopup: false,
+            adress: "http://localhost:5000"
         }
         console.log("probs", probs)
         this.loaddirectorbirthdate()
+    }
+
+    showmainpage = () => {
+        this.setState({loadmainpage: true})
     }
 
     loaddirectorbirthdate = () => {
         this.credentials = {
             directorname: this.state.tdirectorname
         }
-        axios.post("/loaddirectorbirthdate", this.credentials).then(response => this.setState({tbirthday: response.data.birthday}))
-        axios.post("/loaddirectorbirthdate", this.credentials).then(response => this.setState({birthday: response.data.birthday}))
+        axios.post(this.state.adress+"/loaddirectorbirthdate", this.credentials).then(response => this.setState({tbirthday: response.data.birthday}))
+        axios.post(this.state.adress+"/loaddirectorbirthdate", this.credentials).then(response => this.setState({birthday: response.data.birthday}))
     }
 
     handlenameChange = (input) => {
@@ -42,7 +50,7 @@ class AlterDirector extends React.Component {
             directoridentification: this.state.tdirectorname
         }
 
-        axios.post("/alterdirector", this.credentials).then(response => this.setState({"submit": response.data.loaded}, window.location.reload()))
+        axios.post(this.state.adress+"/alterdirector", this.credentials).then(response => this.setState({"submit": response.data.loaded}, this.showmainpage))
 
         // reload window
         // window.location.reload()
@@ -57,10 +65,10 @@ class AlterDirector extends React.Component {
     confirmdelete = () => {
 
         this.director = {"director":this.state.tdirectorname}
-        axios.post("/deletedirector", this.director).then(response => this.setState({deleted : response.data}))
+        axios.post(this.state.adress+"/deletedirector", this.director).then(response => this.setState({deleted : response.data}, this.showmainpage))
 
         // reload
-        window.location.reload()
+        // window.location.reload()
     }
 
     interruptdelete = () => {
@@ -71,37 +79,43 @@ class AlterDirector extends React.Component {
 
         return (
             <div>
-                <TextField id = "Name" label = {this.state.tdirectorname} onChange = {this.handlenameChange}/>
-                <br/>
-                <TextField id = "Birthday" label = {this.state.tbirthday} onChange = {this.handlebirthdayChange}/>
-                <br/>
-                <Button onClick = {this.submit}>
-                    Submit
-                </Button>
-                <Button onClick = {this.deletedirector}>
-                    Delete Director
-                </Button>
-                {this.state.showpopup ?
-                <div>
-                    Do you really want to delete the director:  {this.state.tdirectorname}
-                    <table>
-                        <tbody>
-                            <td>
-                                <Button onClick = {this.confirmdelete}>
-                                    Delete
-                                </Button>
-                            </td>
-                            <td>
-                                <Button onClick = {this.interruptdelete}>
-                                    Cancel
-                                </Button>
-                            </td>
-                        </tbody>
-                    </table>
-                </div>
+                {this.state.loadmainpage ?
+                    < MainPage {...this.state}/>
                 :
-                    null
-                }
+                <div>
+                    <TextField id = "Name" label = {this.state.tdirectorname} onChange = {this.handlenameChange}/>
+                    <br/>
+                    <TextField id = "Birthday" label = {this.state.tbirthday} onChange = {this.handlebirthdayChange}/>
+                    <br/>
+                    <Button onClick = {this.submit}>
+                        Submit
+                    </Button>
+                    <Button onClick = {this.deletedirector}>
+                        Delete Director
+                    </Button>
+                    {this.state.showpopup ?
+                    <div>
+                        Do you really want to delete the director:  {this.state.tdirectorname}
+                        <table>
+                            <tbody>
+                                <td>
+                                    <Button onClick = {this.confirmdelete}>
+                                        Delete
+                                    </Button>
+                                </td>
+                                <td>
+                                    <Button onClick = {this.interruptdelete}>
+                                        Cancel
+                                    </Button>
+                                </td>
+                            </tbody>
+                        </table>
+                    </div>
+                    :
+                        null
+                    }
+                </div>  
+                }   
             </div>
         )
     }

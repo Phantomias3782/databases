@@ -14,11 +14,13 @@ class Movielist extends React.Component {
             movielist: "",
             openmoviesite: false,
             activeuser: probs.activeuser,
+            user_email: probs.activeuser,
             loadmainpage: false,
             newmovie: false,
             actors: probs.actors,
             genres: probs.genres,
-            directorcontent: probs.directorcontent
+            directorcontent: probs.directorcontent,
+            adress: "http://localhost:5000"
         }
         console.log("probs", probs)
         this.loadmovies()
@@ -27,7 +29,7 @@ class Movielist extends React.Component {
 
     loadmovies = () => {
 
-        axios.get("/loadmovielist").then(response => this.setState({movielist: response.data.movies}, this.loadmovielist))
+        axios.get(this.state.adress+"/loadmovielist").then(response => this.setState({movielist: response.data.movies}, this.loadmovielist))
         
     }
 
@@ -81,9 +83,9 @@ class Movielist extends React.Component {
                     < NewMovie {...this.state} />
                 :
                 <div>
-                    <Button onClick = {this.showstate}>
+                    {/* <Button onClick = {this.showstate}>
                         showstate
-                    </Button>
+                    </Button> */}
                     <table>
                         {this.state.content}
                     </table>

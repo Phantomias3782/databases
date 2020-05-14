@@ -13,7 +13,8 @@ class Watchlist extends React.Component {
             activeuser: probs.activeuser,
             openmoviesite: false,
             loadmainpage: false,
-            user_email: probs.activeuser
+            user_email: probs.activeuser,
+            adress: "http://localhost:5000"
         }
 
         this.getwatchlistmovies()
@@ -24,14 +25,14 @@ class Watchlist extends React.Component {
         this.credentials = {
             user: this.state.activeuser
         }
-        axios.post("/loadwatchlist", this.credentials).then(response => this.setState({watchlist: response.data.watchlist}, this.delayaxios))
+        axios.post(this.state.adress+"/loadwatchlist", this.credentials).then(response => this.setState({watchlist: response.data.watchlist}, this.delayaxios))
     }
 
     delayaxios = () => {
         
         this.user = {"user":this.state.activeuser}
 
-        axios.post("/getuserinfo", this.user)
+        axios.post(this.state.adress+"/getuserinfo", this.user)
         .then(response => this.setState({test: response.data.userinfo}, this.delayaxios2))
 
     }
@@ -40,7 +41,7 @@ class Watchlist extends React.Component {
 
         this.user = {"user":this.state.activeuser}
 
-        axios.post("/getuserinfo", this.user)
+        axios.post(this.state.adress+"/getuserinfo", this.user)
         .then(response => this.setState({test: response.data.userinfo}, this.buildwatchlist))
     }
     

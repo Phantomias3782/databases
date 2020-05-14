@@ -13,6 +13,7 @@ Session = sessionmaker(bind=engine)
 # create local Session
 
 s = Session()
+print("Ich werde ausgeführt")
 
 recreate_database()
 

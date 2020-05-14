@@ -3,6 +3,8 @@ import axios from "axios"
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+import MainPage from "../MainPage/mainpage.jsx"
+
 class AlterActor extends React.Component {
 
     constructor(probs) {
@@ -12,9 +14,16 @@ class AlterActor extends React.Component {
             tbirthday: "Birthday in format 2000-01-01",
             actorname: probs.actor,
             birthday: "",
-            showpopup: false
+            loadmainpage: false,
+            user_email: probs.activeuser,
+            showpopup: false,
+            adress: "http://localhost:5000"
         }
         this.loadactorbirthdate()
+    }
+
+    showmainpage = () => {
+        this.setState({loadmainpage: true})
     }
 
     loadactorbirthdate = () => {
@@ -22,8 +31,8 @@ class AlterActor extends React.Component {
             birthday: this.state.tdirectorname,
             actorname: this.state.tactorname
         }
-        axios.post("/loadactorbirthdate", this.credentials).then(response => this.setState({tbirthday: response.data.birthday}))
-        axios.post("/loadactorbirthdate", this.credentials).then(response => this.setState({birthday: response.data.birthday}))
+        axios.post(this.state.adress+"/loadactorbirthdate", this.credentials).then(response => this.setState({tbirthday: response.data.birthday}))
+        axios.post(this.state.adress+"/loadactorbirthdate", this.credentials).then(response => this.setState({birthday: response.data.birthday}))
     }
 
     handlenameChange = (input) => {
@@ -42,7 +51,7 @@ class AlterActor extends React.Component {
             actoridentification: this.state.tactorname
         }
 
-        axios.post("/alteractor", this.credentials).then(response => this.setState({"submitted": response.data.loaded}, window.location.reload()))
+        axios.post(this.state.adress+"/alteractor", this.credentials).then(response => this.setState({"submitted": response.data.loaded}, this.showmainpage))
 
         // reload window
         // window.location.reload()
@@ -57,10 +66,10 @@ class AlterActor extends React.Component {
     confirmdelete = () => {
 
         this.director = {"actor":this.state.tactorname}
-        axios.post("/deleteactor", this.director).then(response => this.setState({deleted : response.data}))
+        axios.post(this.state.adress+"/deleteactor", this.director).then(response => this.setState({deleted : response.data}, this.showmainpage))
 
         // reload
-        window.location.reload()
+        // window.location.reload()
     }
 
     interruptdelete = () => {
@@ -71,36 +80,42 @@ class AlterActor extends React.Component {
 
         return (
             <div>
-                <TextField id = "Name" label = {this.state.tactorname} onChange = {this.handlenameChange}/>
-                <br/>
-                <TextField id = "Birthday" label = {this.state.tbirthday} onChange = {this.handlebirthdayChange}/>
-                <br/>
-                <Button onClick = {this.submit}>
-                    Submit
-                </Button>
-                <Button onClick = {this.deleteactor}>
-                    Delete Actor
-                </Button>
-                {this.state.showpopup ?
-                <div>
-                    Do you really want to delete the actor:  {this.state.tactorname}
-                    <table>
-                        <tbody>
-                            <td>
-                                <Button onClick = {this.confirmdelete}>
-                                    Delete
-                                </Button>
-                            </td>
-                            <td>
-                                <Button onClick = {this.interruptdelete}>
-                                    Cancel
-                                </Button>
-                            </td>
-                        </tbody>
-                    </table>
-                </div>
+                {this.state.loadmainpage ?
+                    < MainPage {...this.state}/>
                 :
-                    null
+                <div>
+                    <TextField id = "Name" label = {this.state.tactorname} onChange = {this.handlenameChange}/>
+                    <br/>
+                    <TextField id = "Birthday" label = {this.state.tbirthday} onChange = {this.handlebirthdayChange}/>
+                    <br/>
+                    <Button onClick = {this.submit}>
+                        Submit
+                    </Button>
+                    <Button onClick = {this.deleteactor}>
+                        Delete Actor
+                    </Button>
+                    {this.state.showpopup ?
+                    <div>
+                        Do you really want to delete the actor:  {this.state.tactorname}
+                        <table>
+                            <tbody>
+                                <td>
+                                    <Button onClick = {this.confirmdelete}>
+                                        Delete
+                                    </Button>
+                                </td>
+                                <td>
+                                    <Button onClick = {this.interruptdelete}>
+                                        Cancel
+                                    </Button>
+                                </td>
+                            </tbody>
+                        </table>
+                    </div>
+                    :
+                        null
+                    }
+                </div>
                 }
             </div>
         )

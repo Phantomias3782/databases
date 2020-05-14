@@ -8,6 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import MainPage from "../MainPage/mainpage.jsx"
+
 class NewMovie extends React.Component {
 
     constructor(probs) {
@@ -17,16 +19,23 @@ class NewMovie extends React.Component {
             movieName: "Movie Name",
             movieLength: "120",
             ageRating: "12",
+            ldescription: "Description",
+            lmovieName: "Movie Name",
+            lmovieLength: "120",
+            lageRating: "12",
             actors: probs.actors,
             genres: probs.genres,
             directorcontent: probs.directorcontent,
             director: "",
             studio: "Universal",
+            lstudio: "Universal",
             apiactors: [],
             apigenre: [],
+            user_email: probs.activeuser,
             activeuser: probs.activeuser,
             genrecontent: [],
-            actorcontent: []
+            actorcontent: [],
+            adress: "http://localhost:5000"
         }
         this.setupcontent()
     }
@@ -120,11 +129,15 @@ class NewMovie extends React.Component {
             "actors": this.state.apiactors
         }
 
-        axios.post("/newmovie", this.credentials).then(response => this.setState({"submit": response.data.loaded}, window.location.reload()))
+        axios.post(this.state.adress+"/newmovie", this.credentials).then(response => this.setState({"submit": response.data.loaded}, this.showmainpage))
         
         // reload window
         // window.location.reload()
 
+    }
+
+    showmainpage = () => {
+        this.setState({loadmainpage: true})
     }
 
     showstate = () => {
@@ -137,38 +150,44 @@ class NewMovie extends React.Component {
 
         return (
             <div>
-                <TextField id = "MovieName" label = {this.state.movieName} onChange = {this.handlenameChange}/>
-                <br/>
-                <TextField id = "Length" label = {this.state.movieLength} onChange = {this.handlelengthChange}/>
-                <br/>
-                <TextField id = "Studio" label = {this.state.studio} onChange = {this.handlestudioChange}/>
-                <br/>
-                <TextField id = "Description" label = {this.state.description} onChange = {this.handledescriptionChange}/>
-                <br/>
-                <TextField id = "AgeRating" label = {this.state.ageRating} onChange = {this.handleageratingChange}/>
-                <br/>
-                <br/>
-                <InputLabel>
-                    Select Director
-                </InputLabel>
-                    <Select value = {this.state.director} onChange = {this.handledirectorchange}>
-                        {this.state.directorcontent}
-                    </Select>
-                <br/>
-                Select actors
-                <br/>
-                {this.state.actorcontent}
-                <br/>
-                Select genre
-                <br/>
-                {this.state.genrecontent}
-                <br/>
-                <Button onClick = {this.submit}>
-                    Submit
-                </Button>
-                <Button onClick = {this.showstate}>
-                    showstate
-                </Button>
+                {this.state.loadmainpage ?
+                    < MainPage {...this.state}/>
+                :
+                <div>
+                    <TextField id = "MovieName" label = {this.state.lmovieName} onChange = {this.handlenameChange}/>
+                    <br/>
+                    <TextField id = "Length" label = {this.state.lmovieLength} onChange = {this.handlelengthChange}/>
+                    <br/>
+                    <TextField id = "Studio" label = {this.state.lstudio} onChange = {this.handlestudioChange}/>
+                    <br/>
+                    <TextField id = "Description" label = {this.state.ldescription} onChange = {this.handledescriptionChange}/>
+                    <br/>
+                    <TextField id = "AgeRating" label = {this.state.lageRating} onChange = {this.handleageratingChange}/>
+                    <br/>
+                    <br/>
+                    <InputLabel>
+                        Select Director
+                    </InputLabel>
+                        <Select value = {this.state.director} onChange = {this.handledirectorchange}>
+                            {this.state.directorcontent}
+                        </Select>
+                    <br/>
+                    Select actors
+                    <br/>
+                    {this.state.actorcontent}
+                    <br/>
+                    Select genre
+                    <br/>
+                    {this.state.genrecontent}
+                    <br/>
+                    <Button onClick = {this.submit}>
+                        Submit
+                    </Button>
+                    {/* <Button onClick = {this.showstate}>
+                        showstate
+                    </Button> */}
+                </div>
+                }
             </div>
         )
     }

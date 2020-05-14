@@ -17,7 +17,8 @@ class Login extends React.Component {
             password: "2000-01-01",
             user_email: "", // clear after finishing
             user_pwd: "",
-            verified: false//true // just to skip login page, delete later
+            verified: false, //true // just to skip login page, delete later
+            adress: "http://localhost:5000"
         }
     }
 
@@ -35,7 +36,7 @@ class Login extends React.Component {
             "user": this.state.user_email
         } 
         // get data from flask
-        axios.post("/loadwatchlist", this.user)
+        axios.post(this.state.adress+"/loadwatchlist", this.user)
         .then(response => this.setState({userwatchlist: response.data.watchlist}))
     }
     
@@ -47,7 +48,7 @@ class Login extends React.Component {
             "password": this.state.user_pwd
         }
 
-        axios.post("/login", this.credentials)
+        axios.post(this.state.adress+"/login", this.credentials)
         .then(response => this.setState({verified: response.data.verrified}))
 
     }

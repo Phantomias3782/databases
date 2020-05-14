@@ -27,7 +27,8 @@ class NewUser extends React.Component {
             eMail: "max@mustermann.com",
             birthday: "2000-01-01",
             abotype: "Premium / Test / Standard", // make to drop down field
-            bankaccount: "xxxx xxxx xxxx"
+            bankaccount: "xxxx xxxx xxxx",
+            adress: "http://localhost:5000"
         }
     }
 
@@ -46,7 +47,7 @@ class NewUser extends React.Component {
             "bankaccount": this.state.bankaccount
         }
 
-        axios.post("/registration", this.credentials).then(response => this.setState({"submit": response.data.loaded}, window.location.reload()))
+        axios.post(this.state.adress+"/registration", this.credentials).then(response => this.setState({"submit": response.data.loaded}, window.location.reload()))
         
         // reload window
         //window.location.reload()
