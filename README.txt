@@ -1,1 +1,0 @@
-Remember: To start flask use: npm run-script start-api
